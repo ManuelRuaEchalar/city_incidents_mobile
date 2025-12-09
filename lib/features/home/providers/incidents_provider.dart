@@ -25,23 +25,33 @@ class IncidentsProvider with ChangeNotifier {
   }
 
   Future<void> loadData() async {
+    // Evitamos recargar si ya estamos cargando
+    if (_isLoading) return;
+
     _isLoading = true;
     _errorMessage = null;
+    // Usamos addPostFrameCallback o notifyListeners protegido
     notifyListeners();
 
     try {
+      // 1. Cargar categorías primero para tenerlas listas para la UI
       _categories = await _repository.getCategories();
+
+      // 2. Cargar incidentes
       _incidents = await _repository.getIncidents();
+
       _isLoading = false;
       notifyListeners();
     } catch (e) {
-      _errorMessage = e.toString();
+      print("Error loading data: $e"); // Log para depuración
+      _errorMessage = 'Error al cargar datos. Verifica tu conexión.';
       _isLoading = false;
       notifyListeners();
     }
   }
 
   Future<void> refresh() async {
+    _incidents = []; // Limpiamos para forzar el refresh visual
     await loadData();
   }
 }

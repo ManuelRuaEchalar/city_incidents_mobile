@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../home/data/models/incident_model.dart';
+import '../../../home/data/models/category_model.dart';
+import '../../../home/data/models/status_model.dart';
 import '../../../shared/widgets/category_icon.dart';
-import '../../data/models/incident_model.dart';
-import '../../data/models/category_model.dart';
 
-class IncidentCard extends StatelessWidget {
+class MyIncidentCard extends StatelessWidget {
   final IncidentModel incident;
   final CategoryModel? category;
+  final StatusModel? status;
   final VoidCallback? onViewMore;
   final VoidCallback? onViewLocation;
   final VoidCallback? onInfoPressed;
 
-  const IncidentCard({
+  const MyIncidentCard({
     super.key,
     required this.incident,
     this.category,
+    this.status,
     this.onViewMore,
     this.onViewLocation,
     this.onInfoPressed,
@@ -24,7 +27,7 @@ class IncidentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 125,
+      height: 135, // Aumentado ligeramente para el nuevo layout
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: const BoxDecoration(
         color: AppColors.white,
@@ -39,30 +42,33 @@ class IncidentCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildCategoryHeader(),
+                  _buildCategoryRow(),
+                  const SizedBox(height: 4),
+                  _buildStatusRow(),
                   const SizedBox(height: 6),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Agregamos la fecha o usuario si quieres
                         Text(
-                          "@${incident.username} • ${_formatDate(incident.createdAt)}",
+                          _formatDate(incident.createdAt),
                           style: TextStyle(
                             fontSize: 8,
                             color: Colors.grey[600],
                           ),
                         ),
                         const SizedBox(height: 2),
-                        Text(
-                          incident.description,
-                          style: const TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w300,
-                            color: AppColors.black,
+                        Expanded(
+                          child: Text(
+                            incident.description,
+                            style: const TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w300,
+                              color: AppColors.black,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
                         ),
                       ],
                     ),
@@ -79,11 +85,10 @@ class IncidentCard extends StatelessWidget {
   }
 
   String _formatDate(DateTime date) {
-    // Formato simple dd/MM
     return "${date.day}/${date.month} ${date.hour}:${date.minute.toString().padLeft(2, '0')}";
   }
 
-  Widget _buildCategoryHeader() {
+  Widget _buildCategoryRow() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
@@ -93,10 +98,9 @@ class IncidentCard extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Asegúrate de que CategoryIcon maneje errores si el ID no existe
           CategoryIcon.build(
             incident.categoryId,
-            size: 16,
+            size: 14,
             color: AppColors.white,
           ),
           const SizedBox(width: 4),
@@ -104,24 +108,75 @@ class IncidentCard extends StatelessWidget {
             child: Text(
               category?.name ?? 'Cargando...',
               style: const TextStyle(
-                fontSize: 12, // Reduje un poco para evitar overflow
+                fontSize: 11,
                 fontWeight: FontWeight.w600,
                 color: AppColors.white,
               ),
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          const SizedBox(width: 4),
-          if (onInfoPressed != null)
+          if (onInfoPressed != null) ...[
+            const SizedBox(width: 4),
             GestureDetector(
               onTap: onInfoPressed,
               child: const Icon(
                 Icons.info_outline,
                 color: AppColors.white,
-                size: 16,
+                size: 14,
               ),
             ),
+          ],
         ],
+      ),
+    );
+  }
+
+  Widget _buildStatusRow() {
+    return Row(
+      children: [
+        const Text(
+          'Estado:',
+          style: TextStyle(
+            fontSize: 10,
+            fontWeight: FontWeight.w500,
+            color: AppColors.black,
+          ),
+        ),
+        const SizedBox(width: 6),
+        _buildStatusBadge(),
+      ],
+    );
+  }
+
+  Widget _buildStatusBadge() {
+    Color backgroundColor;
+    switch (incident.statusId) {
+      case 1: // Rechazado
+        backgroundColor = const Color(0xFFFF8A89);
+        break;
+      case 2: // En revisión
+        backgroundColor = const Color(0xFF76AAFF);
+        break;
+      case 3: // Resuelto
+        backgroundColor = const Color(0xFF94FFC1);
+        break;
+      default:
+        backgroundColor = Colors.grey;
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Text(
+        status?.name ?? 'Cargando...',
+        style: const TextStyle(
+          fontSize: 10,
+          fontWeight: FontWeight.w300,
+          color: AppColors.black,
+        ),
       ),
     );
   }
@@ -131,7 +186,7 @@ class IncidentCard extends StatelessWidget {
       children: [
         Expanded(
           child: SizedBox(
-            height: 30, // Altura fija para botones
+            height: 30,
             child: ElevatedButton(
               onPressed: onViewMore,
               style: ElevatedButton.styleFrom(
@@ -190,7 +245,7 @@ class IncidentCard extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
         child: AspectRatio(
-          aspectRatio: 0.8, // Relación de aspecto vertical
+          aspectRatio: 0.8,
           child: incident.photoUrl != null && incident.photoUrl!.isNotEmpty
               ? Image.network(
                   incident.photoUrl!,
