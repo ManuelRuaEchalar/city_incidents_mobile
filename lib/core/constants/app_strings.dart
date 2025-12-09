@@ -16,7 +16,7 @@ class AppStrings {
   static const String loginLink = 'Inicia sesión';
 
   // API
-  static const String baseUrl = 'http://192.168.0.7:3000';
+  static const String baseUrl = 'http://192.168.0.9:3000';
 
   // Errors
   static const String emailRequired = 'El email es requerido';

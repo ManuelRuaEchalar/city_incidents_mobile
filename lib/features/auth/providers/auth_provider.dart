@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../../../core/utils/secure_storage_helper.dart';
 import '../data/models/login_request.dart';
 import '../data/models/register_request.dart';
 import '../data/repositories/auth_repository.dart';
@@ -14,6 +14,7 @@ class AuthProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
   bool get isAuthenticated => _accessToken != null;
+  String? get token => _accessToken;
 
   Future<bool> signIn(String email, String password) async {
     _isLoading = true;
@@ -26,9 +27,8 @@ class AuthProvider with ChangeNotifier {
 
       _accessToken = response.accessToken;
 
-      // Guardar token en SharedPreferences
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('access_token', response.accessToken);
+      // Guardar token de forma segura
+      await SecureStorageHelper.saveToken(response.accessToken);
 
       _isLoading = false;
       notifyListeners();
@@ -56,9 +56,8 @@ class AuthProvider with ChangeNotifier {
 
       _accessToken = response.accessToken;
 
-      // Guardar token en SharedPreferences
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('access_token', response.accessToken);
+      // Guardar token de forma segura
+      await SecureStorageHelper.saveToken(response.accessToken);
 
       _isLoading = false;
       notifyListeners();
@@ -72,14 +71,12 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<void> loadToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    _accessToken = prefs.getString('access_token');
+    _accessToken = await SecureStorageHelper.getToken();
     notifyListeners();
   }
 
   Future<void> signOut() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('access_token');
+    await SecureStorageHelper.deleteToken();
     _accessToken = null;
     notifyListeners();
   }

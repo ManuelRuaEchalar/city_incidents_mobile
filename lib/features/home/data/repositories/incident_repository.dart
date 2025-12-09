@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/constants/app_strings.dart';
+import '../../../../core/utils/secure_storage_helper.dart';
 import '../models/incident_model.dart';
 import '../models/category_model.dart';
 
@@ -9,8 +9,7 @@ class IncidentRepository {
   final String baseUrl = AppStrings.baseUrl;
 
   Future<String?> _getToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('access_token');
+    return await SecureStorageHelper.getToken();
   }
 
   Future<List<IncidentModel>> getIncidents() async {
