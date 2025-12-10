@@ -15,4 +15,7 @@ class AppColors {
   static const Color buttonYellow = Color(0xFFFEDB30);
   static const Color gradientStart = Color(0xFFFFFFFF);
   static const Color gradientEnd = Color(0xFFEFF4FF);
+  static const Color green = Color(0xFF4CAF50); // Colors.green default
+  static const Color uploadButton = Color(0xFF3CDC9C);
+  static const Color verifiedBackground = Color(0xFF94FFC1);
 }

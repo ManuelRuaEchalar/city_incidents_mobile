@@ -5,6 +5,8 @@ import 'package:geolocator/geolocator.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/utils/location_helper.dart';
 import '../../../../core/utils/camera_helper.dart';
+import '../../../../core/constants/app_strings.dart';
+import '../../../../core/constants/app_sizes.dart';
 import '../../data/models/category_model.dart';
 import '../../data/models/city_model.dart';
 import '../../data/repositories/incident_repository.dart';
@@ -98,14 +100,14 @@ class _ReportDialogState extends State<ReportDialog> {
     // Validaciones
     if (_selectedCategory == null) {
       setState(() {
-        _errorMessage = 'Selecciona una categoría';
+        _errorMessage = AppStrings.categoryRequired;
       });
       return;
     }
 
     if (_currentPosition == null) {
       setState(() {
-        _errorMessage = 'Obtén tu ubicación antes de reportar';
+        _errorMessage = AppStrings.locationRequired;
       });
       return;
     }
@@ -131,14 +133,14 @@ class _ReportDialogState extends State<ReportDialog> {
         Navigator.of(context).pop(true);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Incidente reportado exitosamente'),
-            backgroundColor: Colors.green,
+            content: Text(AppStrings.reportSuccess),
+            backgroundColor: AppColors.green,
           ),
         );
       }
     } catch (e) {
       setState(() {
-        _errorMessage = 'Error al enviar reporte: $e';
+        _errorMessage = '${AppStrings.reportError}: $e';
         _isLoading = false;
       });
     }
@@ -164,13 +166,18 @@ class _ReportDialogState extends State<ReportDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppSizes.radiusLarge),
+      ),
       child: Container(
-        constraints: const BoxConstraints(maxWidth: 400, maxHeight: 650),
-        padding: const EdgeInsets.all(24),
+        constraints: const BoxConstraints(
+          maxWidth: AppSizes.dialogMaxWidth,
+          maxHeight: AppSizes.dialogMaxHeight,
+        ),
+        padding: const EdgeInsets.all(AppSizes.paddingLarge),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(AppSizes.radiusLarge),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -181,7 +188,7 @@ class _ReportDialogState extends State<ReportDialog> {
                 const Expanded(
                   child: Center(
                     child: Text(
-                      'Reportar incidente',
+                      AppStrings.reportTitle,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
@@ -198,8 +205,8 @@ class _ReportDialogState extends State<ReportDialog> {
                     onPressed: () => Navigator.of(context).pop(),
                     icon: SvgPicture.asset(
                       'assets/icons/cancel.svg',
-                      width: 24,
-                      height: 24,
+                      width: AppSizes.iconMedium,
+                      height: AppSizes.iconMedium,
                     ),
                   ),
                 ),
@@ -239,7 +246,7 @@ class _ReportDialogState extends State<ReportDialog> {
 
                           // Seleccionar categoría
                           const Text(
-                            'Seleccionar categoría',
+                            AppStrings.selectCategory,
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
@@ -331,7 +338,7 @@ class _ReportDialogState extends State<ReportDialog> {
 
                           // Ciudad
                           const Text(
-                            'Ciudad',
+                            AppStrings.cityLabel,
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
@@ -353,7 +360,7 @@ class _ReportDialogState extends State<ReportDialog> {
                                 isExpanded: true,
                                 value: _selectedCity,
                                 hint: const Text(
-                                  'Seleccionar ciudad (opcional)',
+                                  AppStrings.selectCityHint,
                                   style: TextStyle(fontSize: 12),
                                 ),
                                 items: _cities.map((city) {
@@ -377,7 +384,7 @@ class _ReportDialogState extends State<ReportDialog> {
 
                           // Ubicación
                           const Text(
-                            'Ubicación',
+                            AppStrings.locationLabel,
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
@@ -387,7 +394,7 @@ class _ReportDialogState extends State<ReportDialog> {
                           const SizedBox(height: 8),
                           SizedBox(
                             width: 321,
-                            height: 50,
+                            height: AppSizes.buttonHeight,
                             child: ElevatedButton(
                               onPressed: _isLoadingLocation
                                   ? null
@@ -416,16 +423,16 @@ class _ReportDialogState extends State<ReportDialog> {
                                       children: [
                                         SvgPicture.asset(
                                           'assets/icons/mi_location.svg',
-                                          width: 20,
-                                          height: 20,
+                                          width: AppSizes.iconSmall,
+                                          height: AppSizes.iconSmall,
                                         ),
                                         const SizedBox(width: 8),
                                         const Text(
-                                          'Mi ubicación',
+                                          AppStrings.myLocationButton,
                                           style: TextStyle(
                                             fontSize: 14,
                                             fontWeight: FontWeight.w400,
-                                            color: Colors.white,
+                                            color: AppColors.white,
                                           ),
                                         ),
                                       ],
@@ -448,7 +455,7 @@ class _ReportDialogState extends State<ReportDialog> {
 
                           // Descripción
                           const Text(
-                            'Descripción (opcional)',
+                            AppStrings.descriptionLabel,
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
@@ -460,7 +467,7 @@ class _ReportDialogState extends State<ReportDialog> {
                             controller: _descriptionController,
                             maxLines: 3,
                             decoration: InputDecoration(
-                              hintText: 'Describe el incidente...',
+                              hintText: AppStrings.descriptionHint,
                               hintStyle: const TextStyle(fontSize: 12),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(6),
@@ -489,7 +496,7 @@ class _ReportDialogState extends State<ReportDialog> {
 
                           // Foto
                           const Text(
-                            'Foto (opcional)',
+                            AppStrings.photoLabel,
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
@@ -499,7 +506,7 @@ class _ReportDialogState extends State<ReportDialog> {
                           const SizedBox(height: 8),
                           SizedBox(
                             width: 321,
-                            height: 50,
+                            height: AppSizes.buttonHeight,
                             child: ElevatedButton(
                               onPressed: _takePicture,
                               style: ElevatedButton.styleFrom(
@@ -516,16 +523,16 @@ class _ReportDialogState extends State<ReportDialog> {
                                 children: [
                                   SvgPicture.asset(
                                     'assets/icons/camera.svg',
-                                    width: 20,
-                                    height: 20,
+                                    width: AppSizes.iconSmall,
+                                    height: AppSizes.iconSmall,
                                   ),
                                   const SizedBox(width: 8),
                                   const Text(
-                                    'Abrir cámara',
+                                    AppStrings.cameraButton,
                                     style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w400,
-                                      color: Colors.white,
+                                      color: AppColors.white,
                                     ),
                                   ),
                                 ],
@@ -539,15 +546,15 @@ class _ReportDialogState extends State<ReportDialog> {
                                 children: [
                                   const Icon(
                                     Icons.check_circle,
-                                    color: Colors.green,
+                                    color: AppColors.green,
                                     size: 16,
                                   ),
                                   const SizedBox(width: 4),
                                   const Text(
-                                    'Foto capturada',
+                                    AppStrings.photoCaptured,
                                     style: TextStyle(
                                       fontSize: 10,
-                                      color: Colors.green,
+                                      color: AppColors.green,
                                     ),
                                   ),
                                   const Spacer(),
@@ -558,7 +565,7 @@ class _ReportDialogState extends State<ReportDialog> {
                                       });
                                     },
                                     child: const Text(
-                                      'Eliminar',
+                                      AppStrings.deleteButton,
                                       style: TextStyle(
                                         fontSize: 10,
                                         color: AppColors.red,
@@ -578,25 +585,28 @@ class _ReportDialogState extends State<ReportDialog> {
                               child: ElevatedButton(
                                 onPressed: _isLoading ? null : _submitReport,
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFF3CDC9C),
+                                  backgroundColor: AppColors.uploadButton,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(16),
+                                    borderRadius: BorderRadius.circular(
+                                      AppSizes.radiusXLarge,
+                                    ),
                                   ),
                                   padding: const EdgeInsets.symmetric(
-                                    vertical: 12,
+                                    vertical:
+                                        12, // Keeping 12 as generic vertical padding for now
                                   ),
                                 ),
                                 child: _isLoading
                                     ? const SizedBox(
-                                        width: 20,
-                                        height: 20,
+                                        width: AppSizes.iconSmall,
+                                        height: AppSizes.iconSmall,
                                         child: CircularProgressIndicator(
                                           color: AppColors.black,
                                           strokeWidth: 2,
                                         ),
                                       )
                                     : const Text(
-                                        'Subir reporte',
+                                        AppStrings.submitReportButton,
                                         style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w500,

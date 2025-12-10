@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/incidents_provider.dart';
+import '../../../../core/constants/app_sizes.dart';
 import '../widgets/map_widget.dart';
 import '../widgets/incidents_bottom_sheet.dart';
 import '../widgets/report_button.dart';
@@ -59,7 +60,7 @@ class _HomePageState extends State<HomePage> {
                       screenHeight -
                       bottomSheetTop +
                       10, // 10px arriba del sheet
-                  right: 20,
+                  right: AppSizes.navBarTopMargin, // 20
                   child: const ReportButton(),
                 );
               },

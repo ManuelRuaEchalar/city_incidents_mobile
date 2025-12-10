@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_strings.dart';
 import '../../data/models/user_model.dart';
 
 class ProfileInfoCard extends StatefulWidget {
@@ -49,7 +50,7 @@ class _ProfileInfoCardState extends State<ProfileInfoCard> {
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.25),
+            color: AppColors.black.withOpacity(0.25),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -79,7 +80,9 @@ class _ProfileInfoCardState extends State<ProfileInfoCard> {
                     ),
                     const SizedBox(width: 4),
                     Text(
-                      _isEditing ? 'Guardar' : 'Editar',
+                      _isEditing
+                          ? AppStrings.saveButton
+                          : AppStrings.editButton,
                       style: const TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.w600,
@@ -93,23 +96,23 @@ class _ProfileInfoCardState extends State<ProfileInfoCard> {
           ),
           const SizedBox(height: 8),
           if (_isEditing) ...[
-            _buildEditField('Usuario:', _usernameController),
+            _buildEditField(AppStrings.usernameLabel, _usernameController),
             const SizedBox(height: 12),
-            _buildEditField('Correo electrónico:', _emailController),
+            _buildEditField(AppStrings.emailLabel, _emailController),
             const SizedBox(height: 12),
             _buildEditField(
-              'Contraseña:',
+              AppStrings.passwordLabel,
               _passwordController,
               isPassword: true,
             ),
           ] else ...[
-            _buildInfoRow('Usuario:', widget.user.username),
+            _buildInfoRow(AppStrings.usernameLabel, widget.user.username),
             const SizedBox(height: 12),
-            _buildInfoRow('Correo electrónico:', widget.user.email),
+            _buildInfoRow(AppStrings.emailLabel, widget.user.email),
             const SizedBox(height: 12),
             _buildVerificationRow(),
             const SizedBox(height: 12),
-            _buildInfoRow('Contraseña:', '********'),
+            _buildInfoRow(AppStrings.passwordLabel, '********'),
           ],
         ],
       ),
@@ -148,7 +151,7 @@ class _ProfileInfoCardState extends State<ProfileInfoCard> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Cuenta verificada:',
+          AppStrings.accountVerifiedLabel,
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
@@ -160,11 +163,11 @@ class _ProfileInfoCardState extends State<ProfileInfoCard> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
             decoration: BoxDecoration(
-              color: const Color(0xFF94FFC1),
+              color: AppColors.verifiedBackground,
               borderRadius: BorderRadius.circular(10),
             ),
             child: const Text(
-              'Verificado',
+              AppStrings.verifiedStatus,
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
@@ -184,7 +187,7 @@ class _ProfileInfoCardState extends State<ProfileInfoCard> {
                 borderRadius: BorderRadius.circular(10),
               ),
               child: const Text(
-                'Verificar',
+                AppStrings.verifyButton,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
@@ -218,7 +221,7 @@ class _ProfileInfoCardState extends State<ProfileInfoCard> {
           controller: controller,
           obscureText: isPassword,
           decoration: InputDecoration(
-            hintText: isPassword ? 'Dejar vacío para no cambiar' : '',
+            hintText: isPassword ? AppStrings.passwordChangeHint : '',
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 12,
               vertical: 8,

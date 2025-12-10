@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_strings.dart';
+import '../../../../core/constants/app_sizes.dart';
 import '../../providers/auth_provider.dart';
 import '../widgets/auth_card.dart';
 import '../widgets/custom_text_field.dart';
@@ -121,11 +122,13 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: AppSizes.navBarTopMargin),
 
               // Card de registro más compacto
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSizes.cardHorizontalMargin,
+                ),
                 child: AuthCard(
                   child: Form(
                     key: _formKey,
@@ -141,7 +144,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           textAlign: TextAlign.center,
                         ),
 
-                        const SizedBox(height: 16),
+                        const SizedBox(height: AppSizes.paddingMedium),
 
                         // Campo Nombre de usuario
                         CustomTextField(
@@ -150,7 +153,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           validator: _validateUsername,
                         ),
 
-                        const SizedBox(height: 12),
+                        const SizedBox(height: AppSizes.spacingMedium),
 
                         // Campo Email
                         CustomTextField(
@@ -160,7 +163,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           validator: _validateEmail,
                         ),
 
-                        const SizedBox(height: 12),
+                        const SizedBox(height: AppSizes.spacingMedium),
 
                         // Campo Contraseña
                         CustomTextField(
@@ -170,7 +173,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           validator: _validatePassword,
                         ),
 
-                        const SizedBox(height: 12),
+                        const SizedBox(height: AppSizes.spacingMedium),
 
                         // Campo Confirmar Contraseña
                         CustomTextField(
@@ -180,7 +183,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           validator: _validateConfirmPassword,
                         ),
 
-                        const SizedBox(height: 20),
+                        const SizedBox(height: AppSizes.navBarTopMargin),
 
                         // Botón Registrarse
                         SizedBox(
@@ -208,7 +211,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                         ),
 
-                        const SizedBox(height: 12),
+                        const SizedBox(height: AppSizes.spacingMedium),
 
                         // Link de login
                         Row(
@@ -248,7 +251,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: AppSizes.navBarTopMargin),
             ],
           ),
         ),

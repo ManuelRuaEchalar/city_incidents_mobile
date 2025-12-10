@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/user_provider.dart';
+import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_strings.dart';
+import '../../../../core/constants/app_sizes.dart';
 import '../widgets/profile_image.dart';
 import '../widgets/profile_info_card.dart';
 import '../widgets/stats_card.dart';
@@ -26,7 +29,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      color: AppColors.white,
       child: SafeArea(
         child: Consumer<UserProvider>(
           builder: (context, provider, child) {
@@ -39,18 +42,19 @@ class _ProfilePageState extends State<ProfilePage> {
             }
 
             if (provider.user == null || provider.stats == null) {
-              return const Center(child: Text('No se pudo cargar el perfil'));
+              return const Center(child: Text(AppStrings.profileLoadError));
             }
 
             return SingleChildScrollView(
               padding: const EdgeInsets.only(
-                top: 100, // Espacio para el navigation bar
-                bottom: 30,
+                top: AppSizes
+                    .profileTopPadding, // Espacio para el navigation bar
+                bottom: AppSizes.profileBottomPadding,
               ),
               child: Column(
                 children: [
                   ProfileImage(imageUrl: provider.user!.profilePicUrl),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: AppSizes.spacingSection),
                   ProfileInfoCard(
                     user: provider.user!,
                     onUpdate: (username, email, password) async {
@@ -61,9 +65,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       );
                     },
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: AppSizes.spacingElement),
                   StatsCard(stats: provider.stats!),
-                  const SizedBox(height: 15),
+                  const SizedBox(height: AppSizes.spacingBetweenCards),
                   ActionButtons(
                     onLogout: () async {
                       final success = await provider.logout();
