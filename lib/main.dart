@@ -1,30 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:tutorial_my_flutter_app/features/home/providers/incidents_provider.dart';
+import 'package:tutorial_my_flutter_app/features/profile/providers/user_provider.dart';
+import 'app/app.dart';
+import 'features/auth/providers/auth_provider.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.teal,
-          brightness: Brightness.dark,
-        ), // ColorScheme.fromSeed
-      ), // ThemeData
-      home: Scaffold(
-        appBar: AppBar(title: Text('Flutter Mapp')), // AppBar
-      ), // Scaffold
-    ); // MaterialApp
-  }
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()..loadToken()),
+        ChangeNotifierProvider(create: (_) => IncidentsProvider()),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
