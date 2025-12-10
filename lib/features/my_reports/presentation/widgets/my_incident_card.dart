@@ -4,14 +4,15 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../home/data/models/incident_model.dart';
 import '../../../home/data/models/category_model.dart';
 import '../../../home/data/models/status_model.dart';
+import '../../../home/data/repositories/incident_repository.dart';
+import '../../../home/presentation/widgets/incident_dialog.dart';
 import '../../../shared/widgets/category_icon.dart';
+import '../../../../core/utils/map_controller_helper.dart';
 
 class MyIncidentCard extends StatelessWidget {
   final IncidentModel incident;
   final CategoryModel? category;
   final StatusModel? status;
-  final VoidCallback? onViewMore;
-  final VoidCallback? onViewLocation;
   final VoidCallback? onInfoPressed;
 
   const MyIncidentCard({
@@ -19,15 +20,70 @@ class MyIncidentCard extends StatelessWidget {
     required this.incident,
     this.category,
     this.status,
-    this.onViewMore,
-    this.onViewLocation,
     this.onInfoPressed,
   });
+
+  static final IncidentRepository _repository = IncidentRepository();
+
+  Future<void> _showIncidentDetail(BuildContext context) async {
+    try {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(child: CircularProgressIndicator()),
+      );
+
+      final incidentDetail = await _repository.getIncidentById(
+        incident.incidentId,
+      );
+
+      if (context.mounted) Navigator.of(context).pop();
+
+      if (context.mounted) {
+        showDialog(
+          context: context,
+          builder: (context) => IncidentDialog(
+            incident: IncidentModel(
+              incidentId: incidentDetail.incidentId,
+              categoryId: incidentDetail.categoryId,
+              statusId: incidentDetail.statusId,
+              cityId: incidentDetail.cityId,
+              latitude: incidentDetail.latitude,
+              longitude: incidentDetail.longitude,
+              description: incidentDetail.description,
+              photoUrl: incidentDetail.photoUrl,
+              addressRef: incidentDetail.addressRef,
+              createdAt: incidentDetail.createdAt,
+              username: '',
+            ),
+            category: incidentDetail.category,
+            status: incidentDetail.status,
+            city: incidentDetail.city,
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) Navigator.of(context).pop();
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
+        );
+      }
+    }
+  }
+
+  void _goToLocation(BuildContext context) {
+    MapControllerHelper.navigateToLocation(
+      context,
+      incident.latitude,
+      incident.longitude,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 135, // Aumentado ligeramente para el nuevo layout
+      height: 130,
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: const BoxDecoration(
         color: AppColors.white,
@@ -38,43 +94,32 @@ class MyIncidentCard extends StatelessWidget {
           _buildImage(),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildCategoryRow(),
                   const SizedBox(height: 4),
                   _buildStatusRow(),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 4),
+                  Text(
+                    _formatDate(incident.createdAt),
+                    style: TextStyle(fontSize: 8, color: Colors.grey[600]),
+                  ),
+                  const SizedBox(height: 2),
                   Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          _formatDate(incident.createdAt),
-                          style: TextStyle(
-                            fontSize: 8,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                        const SizedBox(height: 2),
-                        Expanded(
-                          child: Text(
-                            incident.description,
-                            style: const TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w300,
-                              color: AppColors.black,
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
+                    child: Text(
+                      incident.description,
+                      style: const TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w300,
+                        color: AppColors.black,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  const SizedBox(height: 6),
-                  _buildButtons(),
+                  _buildButtons(context),
                 ],
               ),
             ),
@@ -151,13 +196,13 @@ class MyIncidentCard extends StatelessWidget {
   Widget _buildStatusBadge() {
     Color backgroundColor;
     switch (incident.statusId) {
-      case 1: // Rechazado
+      case 1:
         backgroundColor = const Color(0xFFFF8A89);
         break;
-      case 2: // En revisión
+      case 2:
         backgroundColor = const Color(0xFF76AAFF);
         break;
-      case 3: // Resuelto
+      case 3:
         backgroundColor = const Color(0xFF94FFC1);
         break;
       default:
@@ -181,14 +226,14 @@ class MyIncidentCard extends StatelessWidget {
     );
   }
 
-  Widget _buildButtons() {
+  Widget _buildButtons(BuildContext context) {
     return Row(
       children: [
         Expanded(
           child: SizedBox(
-            height: 30,
+            height: 28,
             child: ElevatedButton(
-              onPressed: onViewMore,
+              onPressed: () => _showIncidentDetail(context),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.orange,
                 foregroundColor: AppColors.prussianBlue,
@@ -201,12 +246,12 @@ class MyIncidentCard extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: 8),
+        const SizedBox(width: 6),
         Expanded(
           child: SizedBox(
-            height: 30,
+            height: 28,
             child: ElevatedButton(
-              onPressed: onViewLocation,
+              onPressed: () => _goToLocation(context),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.red,
                 foregroundColor: AppColors.white,
@@ -240,7 +285,7 @@ class MyIncidentCard extends StatelessWidget {
 
   Widget _buildImage() {
     return Container(
-      width: 85,
+      width: 80,
       margin: const EdgeInsets.only(left: 3),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
@@ -260,8 +305,7 @@ class MyIncidentCard extends StatelessWidget {
                       ),
                     );
                   },
-                  errorBuilder: (context, error, stackTrace) =>
-                      _buildDefaultImage(),
+                  errorBuilder: (_, __, ___) => _buildDefaultImage(),
                 )
               : _buildDefaultImage(),
         ),

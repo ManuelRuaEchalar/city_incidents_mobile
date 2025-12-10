@@ -8,7 +8,7 @@ class CategoryModel {
     required this.categoryId,
     required this.name,
     required this.description,
-    required this.incidentCount,
+    this.incidentCount = 0,
   });
 
   factory CategoryModel.fromJson(Map<String, dynamic> json) {
@@ -16,7 +16,7 @@ class CategoryModel {
       categoryId: json['category_id'],
       name: json['name'],
       description: json['description'],
-      incidentCount: json['_count']['incidents'],
+      incidentCount: json['_count'] != null ? json['_count']['incidents'] : 0,
     );
   }
 }

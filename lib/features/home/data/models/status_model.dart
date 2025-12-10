@@ -8,7 +8,7 @@ class StatusModel {
     required this.statusId,
     required this.name,
     required this.description,
-    required this.incidentCount,
+    this.incidentCount = 0,
   });
 
   factory StatusModel.fromJson(Map<String, dynamic> json) {
@@ -16,7 +16,7 @@ class StatusModel {
       statusId: json['status_id'],
       name: json['name'],
       description: json['description'],
-      incidentCount: json['_count']['incidents'],
+      incidentCount: json['_count'] != null ? json['_count']['incidents'] : 0,
     );
   }
 }

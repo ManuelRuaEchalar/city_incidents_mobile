@@ -8,7 +8,7 @@ class CityModel {
     required this.cityId,
     required this.name,
     required this.code,
-    required this.incidentCount,
+    this.incidentCount = 0,
   });
 
   factory CityModel.fromJson(Map<String, dynamic> json) {
@@ -16,7 +16,7 @@ class CityModel {
       cityId: json['city_id'],
       name: json['name'],
       code: json['code'],
-      incidentCount: json['_count']['incidents'],
+      incidentCount: json['_count'] != null ? json['_count']['incidents'] : 0,
     );
   }
 }

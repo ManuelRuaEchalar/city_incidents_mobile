@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/constants/app_colors.dart';
-import '../../../../core/constants/app_strings.dart';
-import '../../../../core/constants/app_sizes.dart';
 import '../../providers/my_reports_provider.dart';
 import '../widgets/my_incident_card.dart';
 
@@ -23,7 +21,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
         color: AppColors.white,
         // Padding superior para dejar espacio al navigation bar
         // 40 (top del nav bar) + 46 (altura del nav bar) + 16 (margen) = 102
-        padding: const EdgeInsets.only(top: AppSizes.myReportsTopPadding),
+        padding: const EdgeInsets.only(top: 102),
         child: Column(
           children: [
             _buildSortBar(),
@@ -38,22 +36,19 @@ class _MyReportsPageState extends State<MyReportsPage> {
     return Consumer<MyReportsProvider>(
       builder: (context, provider, child) {
         return Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSizes.paddingMedium,
-            vertical: AppSizes.spacingMedium,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           child: Row(
             children: [
               SvgPicture.asset(
                 'assets/icons/order.svg',
-                width: AppSizes.iconMedium,
-                height: AppSizes.iconMedium,
+                width: 24,
+                height: 24,
                 colorFilter: const ColorFilter.mode(
                   AppColors.deepTeal,
                   BlendMode.srcIn,
                 ),
               ),
-              const SizedBox(width: AppSizes.spacingMedium),
+              const SizedBox(width: 12),
               InkWell(
                 onTap: () => provider.toggleSortOrder(),
                 borderRadius: BorderRadius.circular(6),
@@ -71,9 +66,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: Text(
-                    provider.isAscending
-                        ? AppStrings.sortAscending
-                        : AppStrings.sortDescending,
+                    provider.isAscending ? 'Ascendente' : 'Descendente',
                     style: const TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
@@ -117,7 +110,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
                     backgroundColor: AppColors.deepTeal,
                     foregroundColor: AppColors.white,
                   ),
-                  child: const Text(AppStrings.retryButton),
+                  child: const Text('Reintentar'),
                 ),
               ],
             ),
@@ -129,14 +122,10 @@ class _MyReportsPageState extends State<MyReportsPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(
-                  Icons.report_outlined,
-                  size: AppSizes.iconXLarge,
-                  color: AppColors.black,
-                ),
-                const SizedBox(height: AppSizes.paddingMedium),
+                Icon(Icons.report_outlined, size: 64, color: Colors.grey[400]),
+                const SizedBox(height: 16),
                 Text(
-                  AppStrings.noReportsEmpty,
+                  'No tienes reportes aún',
                   style: TextStyle(fontSize: 16, color: Colors.grey[600]),
                 ),
               ],
@@ -158,28 +147,6 @@ class _MyReportsPageState extends State<MyReportsPage> {
                 incident: incident,
                 category: category,
                 status: status,
-                onViewMore: () {
-                  // TODO: Navegar a detalles del incidente
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        'Ver detalles del incidente ${incident.incidentId}',
-                      ),
-                      duration: const Duration(seconds: 1),
-                    ),
-                  );
-                },
-                onViewLocation: () {
-                  // TODO: Navegar a ubicación en el mapa
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        'Ver ubicación del incidente ${incident.incidentId}',
-                      ),
-                      duration: const Duration(seconds: 1),
-                    ),
-                  );
-                },
                 onInfoPressed: () {
                   _showCategoryInfo(context, category);
                 },
@@ -202,7 +169,7 @@ class _MyReportsPageState extends State<MyReportsPage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text(AppStrings.closeButton),
+            child: const Text('Cerrar'),
           ),
         ],
       ),

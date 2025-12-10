@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/utils/secure_storage_helper.dart';
 import '../models/incident_model.dart';
+import '../models/incident_detail_model.dart';
 import '../models/category_model.dart';
 import '../models/city_model.dart';
 
@@ -32,6 +33,30 @@ class IncidentRepository {
         return jsonList.map((json) => IncidentModel.fromJson(json)).toList();
       } else {
         throw Exception('Error al obtener incidentes: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error de conexión: $e');
+    }
+  }
+
+  Future<IncidentDetailModel> getIncidentById(int incidentId) async {
+    try {
+      final token = await _getToken();
+      if (token == null) throw Exception('No token found');
+
+      final response = await http.get(
+        Uri.parse('$baseUrl/incidents/$incidentId'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> json = jsonDecode(response.body);
+        return IncidentDetailModel.fromJson(json);
+      } else {
+        throw Exception('Error al obtener incidente: ${response.statusCode}');
       }
     } catch (e) {
       throw Exception('Error de conexión: $e');

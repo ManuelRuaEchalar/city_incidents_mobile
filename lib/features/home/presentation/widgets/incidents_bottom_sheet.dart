@@ -19,7 +19,7 @@ class IncidentsBottomSheet extends StatelessWidget {
       child: DraggableScrollableSheet(
         initialChildSize: 0.3,
         minChildSize: 0.1,
-        maxChildSize: 0.5, // Cambiado de 0.8 a 0.5 (50% de la pantalla)
+        maxChildSize: 0.5,
         builder: (context, scrollController) {
           return Container(
             margin: const EdgeInsets.symmetric(horizontal: 3),
@@ -73,12 +73,6 @@ class IncidentsBottomSheet extends StatelessWidget {
                           return IncidentCard(
                             incident: incident,
                             category: category,
-                            onViewMore: () {
-                              // TODO: Implementar navegación a detalle
-                            },
-                            onViewLocation: () {
-                              // TODO: Centrar mapa en la ubicación
-                            },
                             onInfoPressed: () {
                               _showCategoryInfo(context, category);
                             },
