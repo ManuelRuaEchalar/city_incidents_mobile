@@ -46,6 +46,7 @@ dependencies:
 
   # Cámara y galería (¡Dependencia agregada!)
   image_picker: ^1.0.7
+  url_launcher: ^6.2.2
 
 dev_dependencies:
   flutter_test:
