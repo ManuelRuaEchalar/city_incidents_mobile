@@ -26,6 +26,13 @@ class IncidentsBottomSheet extends StatelessWidget {
             decoration: const BoxDecoration(
               color: AppColors.white,
               borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 10,
+                  offset: Offset(0, -5),
+                ),
+              ],
             ),
             child: Column(
               children: [

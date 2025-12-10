@@ -15,10 +15,10 @@ class ReportButton extends StatelessWidget {
         color: const Color(0xFFF1C433),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFFF1C433).withOpacity(1),
-            offset: const Offset(2, -5),
-            blurRadius: 30,
-            spreadRadius: 5,
+            color: const Color(0xFFF1C433).withOpacity(0.5),
+            offset: const Offset(2, 5),
+            blurRadius: 20,
+            spreadRadius: 2,
           ),
         ],
       ),

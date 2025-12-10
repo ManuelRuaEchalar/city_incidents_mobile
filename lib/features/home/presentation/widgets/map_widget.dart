@@ -207,7 +207,7 @@ class _MapWidgetState extends State<MapWidget> {
         ),
         if (_isLoadingLocation)
           Positioned(
-            top: 20,
+            top: 100,
             right: 20,
             child: Container(
               padding: const EdgeInsets.all(8),

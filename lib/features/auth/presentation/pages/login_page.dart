@@ -87,14 +87,31 @@ class _LoginPageState extends State<LoginPage> {
               // Imagen superior con aspect ratio 1:1 sin SafeArea
               AspectRatio(
                 aspectRatio: 1,
-                child: Container(
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('assets/images/city_app.png'),
-                      fit: BoxFit.cover,
+                child: Stack(
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      decoration: const BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage('assets/images/city_app.png'),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
-                  ),
+                    const Positioned(
+                      bottom: 20,
+                      left: 20,
+                      right: 20,
+                      child: Text(
+                        "Reporte de incidentes urbanos",
+                        style: TextStyle(
+                          color: AppColors.prussianBlue,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
 

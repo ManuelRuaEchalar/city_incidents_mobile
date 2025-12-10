@@ -47,6 +47,7 @@ dependencies:
   # Cámara y galería (¡Dependencia agregada!)
   image_picker: ^1.0.7
   url_launcher: ^6.2.2
+  flutter_launcher_icons: "^0.13.1"
 
 dev_dependencies:
   flutter_test:
@@ -59,6 +60,13 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter packages.
+
+flutter_launcher_icons:
+  android: "launcher_icon" # Nombre del ícono en Android
+  ios: true # Habilitar para iOS
+  image_path: "assets/images/city_incident_reports_icon_app.png" # <--- Tu ruta
+  min_sdk_android: 21 # O la mínima que soporta tu app
+  
 flutter:
 
   # The following line ensures that the Material Icons font is
