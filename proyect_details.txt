@@ -1,0 +1,193 @@
+# Documentación del Proyecto: Tutorial My Flutter App
+
+## 1. Configuración del Proyecto
+**Nombre del paquete:** `tutorial_my_flutter_app`
+**Versión:** `1.0.0+1`
+**SDK de Flutter:** `^3.10.1`
+
+### Dependencias Principales (`pubspec.yaml`)
+- **Gestión de Estado:** `provider`
+- **Red & API:** `http`
+- **Almacenamiento Local:** `shared_preferences`, `flutter_secure_storage`
+- **Mapas y Geolocalización:** `flutter_map`, `latlong2`, `geolocator`
+- **Assets y UI:** `flutter_svg`, `cupertino_icons`
+- **Funcionalidades Nativas:** `image_picker` (Cámara/Galería), `url_launcher`, `flutter_launcher_icons`
+
+---
+
+## 2. Sistema de Diseño (Design System)
+
+### Fuentes
+- **Familia Principal:** `Poppins`
+- **Pesos:** Regular, Medium (500), SemiBold (600), Bold (700)
+
+### Colores (`AppColors`)
+**Paleta Principal:**
+- Negro (`black`): `#000000`
+- Azul Prusia (`prussianBlue`): `#14213D` (Color Primario)
+- Naranja (`orange`): `#FFFFDC69`
+- Gris Alabastro (`alabasterGray`): `#E5E5E5`
+- Blanco (`white`): `#FFFFFF`
+- Rojo (`red`): `#DD1C1A` (Errores)
+- Deep Teal (`deepTeal`): `#5C807F` (Secundario)
+
+**Otros Colores:**
+- Botón Amarillo (`buttonYellow`): `#FEDB30`
+- Subir Botón (`uploadButton`): `#3CDC9C`
+- Fondo Verificado: `#94FFC1`
+- Logout Button: `#FF8A89` (Rosado/Rojo claro)
+
+---
+
+## 3. Estructura de Archivos y Arquitectura
+El proyecto sigue una arquitectura **Clean Architecture** simplificada por features.
+
+### Core (`lib/core`)
+- `constants`: Valores estáticos de diseño.
+- `theme`: Configuración del tema global.
+- `utils`: Helpers para almacenamiento, mapas, ubicación y cámara.
+
+### Features (`lib/features`)
+Organizado por dominios: `auth`, `home`, `my_reports`, `profile` y `shared`.
+
+---
+
+## 4. Widgets y Componentes UI (Detalle de Información)
+
+A continuación se detalla la información específica que visualiza y gestiona cada widget.
+
+### Feature: Home
+
+#### 1. `IncidentCard` (`lib/features/home/presentation/widgets/incident_card.dart`)
+Tarjeta resumen utilizada en listas públicas de incidentes.
+- **Datos Visualizados:**
+  - **Imagen:** Foto del incidente (o placeholder predeterminado si es nula).
+  - **Categoría:** Icono y nombre de la categoría (ej. "Vías", "Basura").
+  - **Fecha:** Fecha de creación formateada (`DD/MM HH:MM`).
+  - **Descripción:** Texto explicativo breve (truncado a máximo 2 líneas).
+- **Interacciones:**
+  - Botón "Ver más": Abre el `IncidentDialog`.
+  - Botón "Ubicación": Centra el mapa en las coordenadas del incidente.
+  - Botón "Info" (Icono i): Muestra detalles de la categoría.
+
+#### 2. `IncidentDialog` (`lib/features/home/presentation/widgets/incident_dialog.dart`)
+Vista detallada completa de un incidente específico.
+- **Datos Visualizados:**
+  - **Encabezado:** Nombre de la Categoría y Nombre de la Ciudad.
+  - **Imagen:** Foto del incidente en gran tamaño y alta calidad.
+  - **Estado:** Badge de color indicando el estado actual (ej. "Pendiente", "Resuelto").
+  - **Coordenadas:** Latitud y Longitud exactas (`X.XXXXX, Y.YYYYY`).
+  - **Descripción:** Texto completo de la descripción del usuario (sin truncar).
+  - **Fecha Completa:** Fecha y hora detallada (`DD/MM/YYYY HH:MM`).
+- **Interacciones:**
+  - Botón "Cerrar" (X): Cierra el diálogo.
+
+#### 3. `ReportButton` y `ReportDialog` (`lib/features/home/presentation/widgets/report_dialog.dart`)
+Flujo para la creación de nuevos reportes.
+- **Información Gestionada (Inputs):**
+  - **Categoría:** Selección obligatoria de una lista (con iconos visuales).
+  - **Ciudad:** Dropdown de selección de ciudad.
+  - **Ubicación:** Botón que captura y muestra Latitud/Longitud actuales.
+  - **Descripción:** Campo de texto libre para detalles.
+  - **Foto:** Captura de imagen desde la cámara.
+- **Feedback Visual:** Indicadores de carga, mensajes de éxito/error, vista previa de foto capturada ("Foto capturada").
+
+#### 4. `IncidentsBottomSheet` (`lib/features/home/presentation/widgets/incidents_bottom_sheet.dart`)
+- **Datos Visualizados:** Lista desplazable de `IncidentCard`. Muestra "No hay incidentes reportados" si la lista está vacía.
+
+---
+
+### Feature: My Reports
+
+#### 1. `MyIncidentCard` (`lib/features/my_reports/presentation/widgets/my_incident_card.dart`)
+Tarjeta especializada para el historial personal del usuario.
+- **Datos Visualizados (Adicionales a Card normal):**
+  - **Estado Explícito:** Fila designada mostrando "Estado:" y el nombre del estado (ej. "En Revisión").
+  - **Descripción Compacta:** Truncada a 1 sola línea para ahorrar espacio vertical.
+- **Estilo de Estado:**
+  - ID 1 (Pendiente): Rojo (#FFFF8A89)
+  - ID 2 (En Proceso): Azul (#FF76AAFF)
+  - ID 3 (Resuelto): Verde (#FF94FFC1)
+
+---
+
+### Feature: Profile
+
+#### 1. `ProfileInfoCard` (`lib/features/profile/presentation/widgets/profile_info_card.dart`)
+- **Datos Visualizados:**
+  - **Username:** Nombre de usuario actual.
+  - **Email:** Correo electrónico registrado.
+  - **Verificación:** Estado "Cuenta verificada" (verde) o botón para verificar.
+  - **Contraseña:** Oculta (********).
+- **Modo Edición:** Convierte los textos en campos de entrada (`TextField`) para actualizar la información.
+
+#### 2. `StatsCard` (`lib/features/profile/presentation/widgets/stats_card.dart`)
+ Tablero de estadísticas personales.
+- **Datos Visualizados:**
+  - **Total Reportes enviados:** Número entero.
+  - **Reportes Resueltos:** Número entero.
+  - **Reportes en seguimiento:** Número entero.
+
+#### 3. `ProfileImage` (`lib/features/profile/presentation/widgets/profile_image.dart`)
+- **Visual:** Avatar circular del usuario. Muestra un color de fondo (`#BED2FF`) si no hay imagen, o la imagen de red recortada si existe.
+
+#### 4. `ActionButtons` (`lib/features/profile/presentation/widgets/action_buttons.dart`)
+- **Accesos:**
+  - Contacto (Email `mailto`).
+  - Preguntas Frecuentes (Popup con texto estático).
+  - Cerrar Sesión (Acción destructiva).
+
+---
+
+### Feature: Auth
+
+#### 1. `AuthCard`
+- **Propósito:** Contenedor visual para centrar y elevar el contenido de los formularios de login/registro.
+
+---
+
+## 5. API Usage & Endpoints
+URL Base: `http://192.168.0.8:3000`
+
+### Authentication (`AuthRepository`)
+- `POST /auth/signin`: Login. Retorna Token JWT.
+- `POST /auth/signup`: Registro.
+- `POST /auth/logout`: Invalidación de sesión.
+
+### Incidents (`IncidentRepository` / `MyReportsRepository`)
+- `GET /incidents`: Feed público de incidentes.
+- `GET /incidents/:id`: Detalle único.
+- `GET /incidents/my-incidents`: Historial del usuario.
+- `POST /incidents`: Multipart request (Fields: category_id, city_id, lat, long, desc; File: photo).
+- `GET /categories`: Catálogo de tipos de incidentes.
+- `GET /cities`: Catálogo de ciudades.
+- `GET /statuses`: Catálogo de estados.
+
+### Users (`UserRepository`)
+- `GET /users/me`: Perfil completo.
+- `GET /users/my-stats`: Conteo de reportes.
+- `PATCH /users`: Actualización de perfil (username, email, password).
+
+---
+
+## 6. Assets (Iconos y Propósitos)
+
+### Marcadores de Categoría (Mapa y Listas)
+Son usados dinámicamente según el nombre de la categoría:
+- **Basura:** `garbage.svg` / `local_basura.svg` / `garbage_option.svg`
+- **Alumbrado:** `light.svg` / `local_luz.svg` / `light_option.svg`
+- **Vías:** `road.svg` / `local_via.svg` / `road_option.svg`
+- **Semáforos:** `traffic-lights-fill.svg` / `local_semaforo.svg` / `traffic_lights_option.svg`
+- **Edificios:** `building.svg` / `local_edificio.svg`
+- **Otros:** `other_option.svg`
+
+### UI Icons
+- `add_incident.svg`: Icono '+' grande del FAB.
+- `camera.svg`: Botón de tomar foto en el formulario.
+- `cancel.svg`: 'X' para cerrar diálogos.
+- `check_circle`: Icono nativo Material usado en selección.
+- `edit_account.svg`: Lápiz en perfil.
+- `location.svg`: Pin pequeño en botones de tarjeta.
+- `mi_location.svg`: Icono blanco de mira/target en botón de ubicación.
+- `logout.svg`: Puerta/Flecha de salida.
+- `default_incident_image.svg`: Placeholder gris cuando no hay foto.

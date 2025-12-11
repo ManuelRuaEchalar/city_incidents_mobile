@@ -16,7 +16,7 @@ class AppStrings {
   static const String loginLink = 'Inicia sesión';
 
   // API
-  static const String baseUrl = 'http://192.168.0.8:3000';
+  static const String baseUrl = 'https://incidents-api.vercel.app';
 
   // Errors
   static const String emailRequired = 'El email es requerido';
