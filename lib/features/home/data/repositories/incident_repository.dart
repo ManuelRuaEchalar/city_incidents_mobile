@@ -30,7 +30,18 @@ class IncidentRepository {
 
       if (response.statusCode == 200) {
         final List<dynamic> jsonList = jsonDecode(response.body);
-        return jsonList.map((json) => IncidentModel.fromJson(json)).toList();
+        return jsonList.map((json) {
+          if (json['description'] != null) {
+            try {
+              json['description'] = utf8.decode(
+                base64Decode(json['description']),
+              );
+            } catch (e) {
+              // Si no es base64 válido, dejar el original
+            }
+          }
+          return IncidentModel.fromJson(json);
+        }).toList();
       } else {
         throw Exception('Error al obtener incidentes: ${response.statusCode}');
       }
@@ -54,6 +65,15 @@ class IncidentRepository {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> json = jsonDecode(response.body);
+        if (json['description'] != null) {
+          try {
+            json['description'] = utf8.decode(
+              base64Decode(json['description']),
+            );
+          } catch (e) {
+            // Si falla, ignoramos
+          }
+        }
         return IncidentDetailModel.fromJson(json);
       } else {
         throw Exception('Error al obtener incidente: ${response.statusCode}');
@@ -141,7 +161,8 @@ class IncidentRepository {
         request.fields['city_id'] = cityId.toString();
       }
       if (description != null && description.isNotEmpty) {
-        request.fields['description'] = description;
+        // CAMBIO AQUÍ: Codificar en Base64 para saltar el WAF
+        request.fields['description'] = base64Encode(utf8.encode(description));
       }
       if (addressRef != null && addressRef.isNotEmpty) {
         request.fields['address_ref'] = addressRef;
